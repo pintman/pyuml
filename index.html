@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PyUML – Python und Klassendiagramm</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>PyUML</h1>
+    <div class="actions">
+      <button type="button" id="btn-example" title="Beispielprogramm laden">Beispiel</button>
+      <button type="button" id="btn-open" title="Python-Datei öffnen">Öffnen</button>
+      <button type="button" id="btn-save" title="Quelltext als .py-Datei herunterladen">Speichern</button>
+      <input type="file" id="file-input" accept=".py,text/x-python,text/plain" hidden>
+    </div>
+  </header>
+
+  <main class="panes" id="panes">
+    <section class="pane editor-pane" id="editor-pane">
+      <div class="editor" id="editor"></div>
+      <div class="status" id="status" aria-live="polite">
+        <div class="status-error" id="status-error" hidden></div>
+        <ul class="status-warnings" id="status-warnings" hidden></ul>
+      </div>
+    </section>
+    <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" title="Trennlinie verschieben"></div>
+    <section class="pane diagram-pane" id="diagram-pane">
+      <div class="diagram-tools">
+        <button type="button" id="btn-fit" title="Diagramm einpassen">Einpassen</button>
+      </div>
+      <div class="diagram" id="diagram"></div>
+      <div class="diagram-message" id="diagram-message">Python wird geladen …</div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/addon/selection/active-line.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/elkjs@0.9.3/lib/elk.bundled.js"></script>
+  <script src="js/notation.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/analyzer-client.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/example.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/viewport.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

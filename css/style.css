@@ -1,0 +1,105 @@
+:root {
+  --bg: #fff;
+  --fg: #1d1d1f;
+  --muted: #666;
+  --line: #d0d0d5;
+  --panel: #f6f6f8;
+  --accent: #2563eb;
+  --error: #b42318;
+  --error-bg: #fdecea;
+  --warn: #8a5a00;
+  --warn-bg: #fff6e0;
+  --uml-fill: #fffdf5;
+  --uml-stroke: #333;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.topbar h1 { font-size: 18px; margin: 0; }
+.actions { display: flex; gap: 6px; }
+button {
+  font: inherit;
+  font-size: 14px;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+
+/* ---- Zweispaltige Oberfläche ---- */
+.panes { flex: 1; display: flex; min-height: 0; }
+.pane { min-width: 0; min-height: 0; position: relative; display: flex; flex-direction: column; }
+.editor-pane { flex: 0 0 45%; }
+.diagram-pane { flex: 1 1 0; }
+.splitter {
+  flex: 0 0 6px;
+  cursor: col-resize;
+  background: var(--line);
+  touch-action: none;
+}
+.splitter:hover, .splitter.dragging { background: var(--accent); }
+
+/* ---- Editor ---- */
+.editor { flex: 1; min-height: 0; }
+.editor .CodeMirror { height: 100%; font-size: 14px; }
+.editor textarea.fallback { width: 100%; height: 100%; font: 14px monospace; border: 0; padding: 8px; resize: none; }
+.CodeMirror .cm-error-line { background: var(--error-bg); }
+.CodeMirror .cm-goto-line { background: #dbeafe; }
+
+.status { border-top: 1px solid var(--line); font-size: 13px; max-height: 30%; overflow: auto; }
+.status-error { padding: 6px 10px; color: var(--error); background: var(--error-bg); }
+.status-warnings { margin: 0; padding: 4px 10px 4px 28px; color: var(--warn); background: var(--warn-bg); }
+.status-warnings li { cursor: pointer; }
+
+/* ---- Diagramm ---- */
+.diagram { flex: 1; min-height: 0; overflow: hidden; touch-action: none; cursor: grab; }
+.diagram.panning { cursor: grabbing; }
+.diagram svg { width: 100%; height: 100%; display: block; user-select: none; }
+.diagram.stale svg { opacity: 0.35; filter: grayscale(1); }
+.diagram-tools { position: absolute; top: 8px; right: 8px; z-index: 1; }
+.diagram-message {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  padding: 24px; color: var(--muted); pointer-events: none; white-space: pre-line;
+}
+.diagram-message.error { color: var(--error); }
+.diagram-message[hidden] { display: none; }
+
+svg.uml text { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; font-size: 13px; fill: var(--fg); }
+svg.uml .box { fill: var(--uml-fill); stroke: var(--uml-stroke); stroke-width: 1.2; }
+svg.uml .sep { stroke: var(--uml-stroke); stroke-width: 1; }
+svg.uml .uml-class { cursor: pointer; }
+svg.uml .uml-class:hover .box { stroke: var(--accent); stroke-width: 2; }
+svg.uml .edge { fill: none; stroke: var(--uml-stroke); stroke-width: 1.2; }
+svg.uml .edge.dashed { stroke-dasharray: 6 4; }
+svg.uml .m-hollow { fill: #fff; stroke: var(--uml-stroke); stroke-width: 1.2; }
+svg.uml .m-filled { fill: var(--uml-stroke); stroke: var(--uml-stroke); stroke-width: 1.2; }
+svg.uml .m-open { fill: none; stroke: var(--uml-stroke); stroke-width: 1.4; }
+svg.uml text.mult { font-size: 12px; }
+
+/* ---- Schmale Fenster: Diagramm unter dem Editor ---- */
+@media (max-width: 799px) {
+  .panes { flex-direction: column; }
+  .editor-pane { flex: 0 0 50% !important; }
+  .splitter { display: none; }
+  .diagram-pane { border-top: 1px solid var(--line); }
+}

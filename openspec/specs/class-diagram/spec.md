@@ -1,10 +1,10 @@
-# Spec Delta
+# class-diagram Specification
 
 ## Purpose
 
 Stellt das Klassenmodell als UML-2.5-konformes Klassendiagramm dar und ordnet es automatisch so an, dass der Aufbau des Diagramms dem Aufbau des Quelltexts ähnelt.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Klassensymbol
 Jede Klasse SHALL als Rechteck mit drei durch Linien getrennten Bereichen dargestellt werden: Name (zentriert, fett), Attribute, Methoden. Leere Attribut- oder Methodenbereiche SHALL als leere Bereiche erhalten bleiben; Klassen ohne Inhalt aus externen Basisklassen SHALL nur den Namensbereich zeigen.
@@ -33,11 +33,15 @@ Alle Attribute des Modells SHALL im Attributbereich erscheinen, auch wenn zusät
 - **THEN** steht `+ konten: list[Konto]` im Attributbereich von `Bank` und zusätzlich führt eine Linie zu `Konto`
 
 ### Requirement: Notation von Methoden
-Methoden SHALL als `<Sichtbarkeit> <name>(<param>: <Typ> = <Standard>, …): <Rückgabetyp>` erscheinen; fehlende Typen, Standardwerte bzw. Rückgabetypen SHALL entfallen. Abstrakte Methoden SHALL kursiv, statische unterstrichen sein. Der Konstruktor SHALL als `__init__` erscheinen.
+Methoden SHALL als `<Sichtbarkeit> <name>(<param>: <Typ> = <Standard>, …): <Rückgabetyp>` erscheinen; fehlende Typen, Standardwerte bzw. Rückgabetypen SHALL entfallen. Abstrakte Methoden SHALL kursiv, statische unterstrichen sein. Der Konstruktor (`__init__`) SHALL mit dem Namen der Klasse und ohne Rückgabetyp erscheinen.
 
 #### Scenario: Methode mit Rückgabe
 - **WHEN** die Methode `fahren(km: int = 10) -> float` öffentlich ist
 - **THEN** wird `+ fahren(km: int = 10): float` angezeigt
+
+#### Scenario: Konstruktor
+- **WHEN** die Klasse `Auto` die Methode `def __init__(self, marke: str) -> None:` hat
+- **THEN** wird `+ Auto(marke: str)` angezeigt
 
 #### Scenario: Abstrakte Methode
 - **WHEN** `flaeche` abstrakt ist
