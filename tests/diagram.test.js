@@ -28,6 +28,8 @@
   T.test('Notation: Methode mit Rückgabe, abstrakt kursiv, statisch unterstrichen', function () {
     const m = { name: 'fahren', params: [{ name: 'km', type: 'int', default: '10' }], returns: 'float', visibility: '+', static: false, abstract: false };
     T.eq(N.methodText(m), '+ fahren(km: int = 10): float');
+    T.eq(N.methodText({ name: 'kaufen', params: [], returns: 'None', visibility: '+' }), '+ kaufen(): void');
+    T.eq(N.methodText({ name: 'f', params: [], returns: 'int | None', visibility: '+' }), '+ f(): int | None');
     T.eq(N.methodText({ name: 'f', params: [{ name: 'x', type: null, default: null }], returns: null, visibility: '#' }), '# f(x)');
     const v = N.classView(cls('Form', { kind: 'abstract', methods: [
       { name: 'flaeche', params: [], returns: 'float', visibility: '+', static: false, abstract: true },

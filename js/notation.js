@@ -14,11 +14,12 @@
     return p.name + (p.type ? ': ' + p.type : '') + (p.default != null ? ' = ' + p.default : '');
   }
 
-  /** Konstruktor (__init__) erscheint mit dem Klassennamen und ohne Rückgabetyp. */
+  /** Konstruktor (__init__) erscheint mit dem Klassennamen und ohne Rückgabetyp; Rückgabe None als void. */
   function methodText(m, className) {
     const ctor = m.name === '__init__' && className;
+    const returns = m.returns === 'None' ? 'void' : m.returns;
     return m.visibility + ' ' + (ctor ? className : m.name) + '(' + m.params.map(paramText).join(', ') + ')' +
-      (m.returns && !ctor ? ': ' + m.returns : '');
+      (returns && !ctor ? ': ' + returns : '');
   }
 
   /** Klasse → { stereotype, name, nameItalic, sections: [[{text, italic, underline}]] } */

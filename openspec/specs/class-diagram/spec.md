@@ -33,11 +33,15 @@ Alle Attribute des Modells SHALL im Attributbereich erscheinen, auch wenn zusät
 - **THEN** steht `+ konten: list[Konto]` im Attributbereich von `Bank` und zusätzlich führt eine Linie zu `Konto`
 
 ### Requirement: Notation von Methoden
-Methoden SHALL als `<Sichtbarkeit> <name>(<param>: <Typ> = <Standard>, …): <Rückgabetyp>` erscheinen; fehlende Typen, Standardwerte bzw. Rückgabetypen SHALL entfallen. Abstrakte Methoden SHALL kursiv, statische unterstrichen sein. Der Konstruktor (`__init__`) SHALL mit dem Namen der Klasse und ohne Rückgabetyp erscheinen.
+Methoden SHALL als `<Sichtbarkeit> <name>(<param>: <Typ> = <Standard>, …): <Rückgabetyp>` erscheinen; fehlende Typen, Standardwerte bzw. Rückgabetypen SHALL entfallen. Abstrakte Methoden SHALL kursiv, statische unterstrichen sein. Der Konstruktor (`__init__`) SHALL mit dem Namen der Klasse und ohne Rückgabetyp erscheinen. Der Rückgabetyp `None` SHALL als `void` erscheinen.
 
 #### Scenario: Methode mit Rückgabe
 - **WHEN** die Methode `fahren(km: int = 10) -> float` öffentlich ist
 - **THEN** wird `+ fahren(km: int = 10): float` angezeigt
+
+#### Scenario: Rückgabe None
+- **WHEN** die Methode `def kaufen(self) -> None:` öffentlich ist
+- **THEN** wird `+ kaufen(): void` angezeigt
 
 #### Scenario: Konstruktor
 - **WHEN** die Klasse `Auto` die Methode `def __init__(self, marke: str) -> None:` hat
