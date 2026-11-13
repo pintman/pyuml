@@ -14,8 +14,10 @@
       <button type="button" id="btn-example" title="Beispielprogramm laden">Beispiel</button>
       <button type="button" id="btn-open" title="Python-Datei öffnen">Öffnen</button>
       <button type="button" id="btn-save" title="Quelltext als .py-Datei herunterladen">Speichern</button>
+      <button type="button" id="btn-share" title="Link mit Quelltext kopieren">Teilen</button>
       <input type="file" id="file-input" accept=".py,text/x-python,text/plain" hidden>
     </div>
+    <div class="notice" id="notice" aria-live="polite" hidden></div>
   </header>
 
   <main class="panes" id="panes">
@@ -45,6 +47,7 @@
   <script src="js/render.js"></script>
   <script src="js/analyzer-client.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/share.js"></script>
   <script src="js/example.js"></script>
   <script src="js/editor.js"></script>
   <script src="js/viewport.js"></script>

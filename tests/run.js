@@ -7,7 +7,7 @@ const vm = require('vm');
 
 const root = path.join(__dirname, '..');
 // Nur DOM-freie Module; Reihenfolge wie in index.html
-const sources = ['notation', 'layout', 'render', 'analyzer-client', 'storage', 'example']
+const sources = ['notation', 'layout', 'render', 'analyzer-client', 'storage', 'share', 'example']
   .map(function (m) { return path.join(root, 'js', m + '.js'); })
   .filter(function (f) { return fs.existsSync(f); });
 const testFiles = fs.readdirSync(__dirname)

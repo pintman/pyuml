@@ -44,6 +44,16 @@ button {
   cursor: pointer;
 }
 button:hover { border-color: var(--accent); }
+.notice {
+  font-size: 14px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  color: var(--fg);
+}
+.notice.error { border-color: var(--error); background: var(--error-bg); color: var(--error); }
+.notice[hidden] { display: none; }
 
 /* ---- Zweispaltige Oberfläche ---- */
 .panes { flex: 1; display: flex; min-height: 0; }

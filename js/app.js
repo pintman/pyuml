@@ -13,13 +13,41 @@
 
   let storage;
   try { storage = P.createStorage(G.localStorage); } catch (e) { storage = P.createStorage(null); }
+  let noticeTimer = null;
+  // Startreihenfolge: geteilter Link → gespeicherter Stand → Beispiel
+  const shared = takeSharedCode();
+  if (shared != null) storage.save(shared);
   const saved = storage.load();
-  const editor = P.createEditor($('editor'), saved != null ? saved : P.EXAMPLE);
+  const editor = P.createEditor($('editor'), shared != null ? shared : saved != null ? saved : P.EXAMPLE);
   let fileName = 'programm.py';
   let hasDiagram = false;
   let renderSeq = 0;
 
+  // ---- Geteilter Link ----
+  /** Liest #code=… und entfernt das Fragment. → Quelltext oder null (kein/ungültiger Link) */
+  function takeSharedCode() {
+    const res = P.Share.readHash(G.location.hash);
+    if (!res) return null;
+    G.history.replaceState(null, '', G.location.pathname + G.location.search);
+    if (res.error) { notify('Link konnte nicht gelesen werden', true); return null; }
+    return res.code;
+  }
+
+  G.addEventListener('hashchange', function () {
+    const code = takeSharedCode();
+    if (code != null) editor.setValue(code);            // onChange speichert und analysiert
+  });
+
   // ---- Meldungen ----
+  function notify(text, isError) {
+    const el = $('notice');
+    el.textContent = text;
+    el.classList.toggle('error', !!isError);
+    el.hidden = false;
+    clearTimeout(noticeTimer);
+    noticeTimer = setTimeout(function () { el.hidden = true; }, isError ? 6000 : 3000);
+  }
+
   function showMessage(text, isError) {
     els.message.textContent = text || '';
     els.message.hidden = !text;
@@ -144,6 +172,17 @@
     a.click();
     a.remove();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  });
+
+  $('btn-share').addEventListener('click', function () {
+    const url = P.Share.buildUrl(G.location.href, editor.getValue());
+    const long = url.length > 8000 ? ' – Link ist sehr lang, manche Programme kürzen ihn' : '';
+    function fallback() { G.prompt('Link zum Kopieren:', url); }
+    if (G.navigator.clipboard && G.navigator.clipboard.writeText) {
+      G.navigator.clipboard.writeText(url).then(function () { notify('Link kopiert' + long); }, fallback);
+    } else {
+      fallback();
+    }
   });
 
   // ---- Verschiebbare Trennlinie ----

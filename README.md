@@ -2,7 +2,7 @@
 
 Python-Quelltext links, UML-Klassendiagramm rechts – live im Browser.
 
-Für den OOP-Unterricht mit Python: Jede Änderung am Code erscheint nach einer kurzen Tipp-Pause im Klassendiagramm (UML 2.5). Der Code wird mit Pythons `ast`-Modul (Pyodide im Browser) **analysiert, nicht ausgeführt**. Kein Server, keine Installation; der Quelltext bleibt im Browser (localStorage).
+Für den OOP-Unterricht mit Python: Jede Änderung am Code erscheint nach einer kurzen Tipp-Pause im Klassendiagramm (UML 2.5). Der Code wird mit Pythons `ast`-Modul (Pyodide im Browser) **analysiert, nicht ausgeführt**. Kein Server, keine Installation; der Quelltext bleibt im Browser (localStorage) – außer du teilst ihn aktiv per Link (siehe [Teilen](#teilen)).
 
 ## Starten
 
@@ -15,6 +15,12 @@ python3 -m http.server
 Danach <http://localhost:8000/> öffnen. Beim ersten Laden wird Pyodide (~10 MB) per CDN geladen; eine Internetverbindung ist nötig.
 
 GitHub Pages: Repository-Root aus `main` veröffentlichen – alle Pfade sind relativ.
+
+## Teilen
+
+„Teilen“ kopiert einen Link auf die aktuelle Seite in die Zwischenablage, der den vollständigen Quelltext enthält (UTF-8, URL-sicheres Base64 im Fragment `#code=…`). Das Fragment wird vom Browser nicht an den Webserver übertragen; der Quelltext landet nur dort, wo der Link eingefügt wird. Verweigert der Browser die Zwischenablage, erscheint der Link zum manuellen Kopieren.
+
+Beim Öffnen eines solchen Links steht dessen Quelltext im Editor und das Diagramm wird erzeugt. Der Link-Inhalt **ersetzt den lokal gespeicherten Stand** und wird selbst gespeichert; anschließend wird das Fragment aus der Adresszeile entfernt, damit spätere Änderungen beim Neuladen erhalten bleiben. Ist der Link beschädigt, erscheint „Link konnte nicht gelesen werden“ und der bisherige Stand bleibt unverändert. Sehr lange Links (> 8.000 Zeichen) werden von manchen Programmen gekürzt – dann lieber „Speichern“ und die Datei weitergeben.
 
 ## Was erkannt wird
 
@@ -111,7 +117,7 @@ Ergebnis: `Fahrbar` ist ein Interface, das `Auto` realisiert; `Tier` ist abstrak
 ## Tests
 
 ```sh
-node tests/run.js                    # JS-Module (Notation, Layout, Renderer, Client, Storage)
+node tests/run.js                    # JS-Module (Notation, Layout, Renderer, Client, Storage, Share)
 python3 -m unittest discover tests   # Analyse in py/uml_model.py (CPython ≥ 3.11)
 ```
 
@@ -121,7 +127,7 @@ Keine npm-Abhängigkeiten.
 
 ```
 index.html, css/style.css
-js/   app.js editor.js analyzer-client.js worker.js notation.js layout.js render.js viewport.js storage.js example.js
+js/   app.js editor.js analyzer-client.js worker.js notation.js layout.js render.js viewport.js storage.js share.js example.js
 py/   uml_model.py      Analyse: analyze(source) -> Klassenmodell (dict)
 tests/
 ```
