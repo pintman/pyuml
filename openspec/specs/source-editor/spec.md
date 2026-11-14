@@ -43,17 +43,6 @@ Die Anwendung SHALL das Diagramm nach jeder Änderung des Quelltexts automatisch
 - **WHEN** der Nutzer zehn Zeichen in schneller Folge tippt
 - **THEN** wird das Diagramm erst nach der Tipp-Pause einmal neu erzeugt
 
-### Requirement: Quelltext wird nicht ausgeführt
-Die Anwendung SHALL den Quelltext ausschließlich syntaktisch analysieren und ihn nicht ausführen. Seiteneffekte im Quelltext (Ausgaben, Endlosschleifen, Eingaben) SHALL keine Wirkung haben.
-
-#### Scenario: Endlosschleife im Quelltext
-- **WHEN** der Quelltext `while True: pass` auf Modulebene enthält
-- **THEN** bleibt die Anwendung bedienbar und das Diagramm wird erzeugt
-
-#### Scenario: Ausgabe im Quelltext
-- **WHEN** der Quelltext `print("Hallo")` enthält
-- **THEN** erscheint keine Ausgabe und das Diagramm wird normal erzeugt
-
 ### Requirement: Syntaxfehler anzeigen
 Bei einem Syntaxfehler SHALL die Anwendung die Fehlermeldung mit Zeilennummer unterhalb des Editors anzeigen, die betroffene Zeile im Editor markieren und das zuletzt gültige Diagramm ausgegraut stehen lassen. Nach Behebung SHALL Meldung und Markierung verschwinden.
 
