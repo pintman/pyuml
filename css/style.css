@@ -80,6 +80,24 @@ button:hover { border-color: var(--accent); }
 .status-warnings { margin: 0; padding: 4px 10px 4px 28px; color: var(--warn); background: var(--warn-bg); }
 .status-warnings li { cursor: pointer; }
 
+/* ---- Ausgabe ---- */
+.output { flex: 0 0 30%; min-height: 0; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.output.collapsed { flex: 0 0 auto; }
+.output.collapsed .output-body { display: none; }
+.output-head { display: flex; align-items: center; gap: 10px; padding: 2px 6px; background: var(--panel); font-size: 13px; }
+.output-toggle { border: 0; background: none; padding: 2px 6px; font-size: 13px; font-weight: 600; }
+.output-toggle .arrow { display: inline-block; transition: transform 0.15s; }
+.output.collapsed .output-toggle .arrow { transform: rotate(-90deg); }
+.output-state { color: var(--muted); }
+.output-state.error { color: var(--error); }
+.output-body {
+  flex: 1; min-height: 0; margin: 0; padding: 6px 10px; overflow: auto;
+  font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.output-body .err { color: var(--error); }
+.output-body .note { color: var(--muted); font-style: italic; }
+
 /* ---- Diagramm ---- */
 .diagram { flex: 1; min-height: 0; overflow: hidden; touch-action: none; cursor: grab; }
 .diagram.panning { cursor: grabbing; }
@@ -110,6 +128,8 @@ svg.uml text.mult { font-size: 12px; }
 @media (max-width: 799px) {
   .panes { flex-direction: column; }
   .editor-pane { flex: 0 0 50% !important; }
+  .output { flex-basis: 35%; }
+  .output.collapsed { flex-basis: auto; }
   .splitter { display: none; }
   .diagram-pane { border-top: 1px solid var(--line); }
 }

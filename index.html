@@ -27,6 +27,14 @@
         <div class="status-error" id="status-error" hidden></div>
         <ul class="status-warnings" id="status-warnings" hidden></ul>
       </div>
+      <section class="output" id="output">
+        <div class="output-head">
+          <button type="button" class="output-toggle" id="btn-output" aria-expanded="true" aria-controls="output-body"
+                  title="Ausgabe ein-/ausblenden"><span class="arrow" aria-hidden="true">▾</span> Ausgabe</button>
+          <span class="output-state" id="output-state" aria-live="polite"></span>
+        </div>
+        <pre class="output-body" id="output-body"></pre>
+      </section>
     </section>
     <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" title="Trennlinie verschieben"></div>
     <section class="pane diagram-pane" id="diagram-pane">
@@ -46,6 +54,7 @@
   <script src="js/layout.js"></script>
   <script src="js/render.js"></script>
   <script src="js/analyzer-client.js"></script>
+  <script src="js/runner-client.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/share.js"></script>
   <script src="js/example.js"></script>

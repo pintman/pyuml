@@ -2,7 +2,7 @@
 
 Python-Quelltext links, UML-Klassendiagramm rechts – live im Browser.
 
-Für den OOP-Unterricht mit Python: Jede Änderung am Code erscheint nach einer kurzen Tipp-Pause im Klassendiagramm (UML 2.5). Der Code wird mit Pythons `ast`-Modul (Pyodide im Browser) **analysiert, nicht ausgeführt**. Kein Server, keine Installation; der Quelltext bleibt im Browser (localStorage) – außer du teilst ihn aktiv per Link (siehe [Teilen](#teilen)).
+Für den OOP-Unterricht mit Python: Jede Änderung am Code erscheint nach einer kurzen Tipp-Pause im Klassendiagramm (UML 2.5). Für das Diagramm wird der Code mit Pythons `ast`-Modul (Pyodide im Browser) **analysiert, nicht ausgeführt**; ausgeführt wird er nur getrennt davon für den [Ausgabe-Bereich](#ausgabe). Kein Server, keine Installation; der Quelltext bleibt im Browser (localStorage) – außer du teilst ihn aktiv per Link (siehe [Teilen](#teilen)).
 
 ## Starten
 
@@ -15,6 +15,16 @@ python3 -m http.server
 Danach <http://localhost:8000/> öffnen. Beim ersten Laden wird Pyodide (~10 MB) per CDN geladen; eine Internetverbindung ist nötig.
 
 GitHub Pages: Repository-Root aus `main` veröffentlichen – alle Pfade sind relativ.
+
+## Ausgabe
+
+Unter dem Quelltext zeigt der Bereich „Ausgabe“, was das Programm tut: `print`-Ausgaben und Fehlermeldungen (Tracebacks mit Zeilennummer, rot). Solange der Bereich eingeblendet ist, wird das Programm **nach jeder Tipp-Pause automatisch ausgeführt** – ebenso nach dem Laden, Öffnen einer Datei und Einblenden. Jeder Lauf startet frisch (`__name__ == "__main__"`) und ersetzt die vorige Ausgabe. Ein Klick auf „Ausgabe“ blendet den Bereich aus (der Zustand wird im Browser gespeichert); ausgeblendet wird nichts ausgeführt und kein zweiter Python-Interpreter geladen.
+
+- **Zeitlimit 5 s:** Längere Läufe (z. B. Endlosschleifen) werden abgebrochen; die bisherige Ausgabe bleibt stehen.
+- **`input()`** öffnet einen Browser-Dialog – bei jeder Ausführung erneut. Abbrechen beendet den Lauf. Die Zeit im Dialog zählt nicht zum Zeitlimit.
+- **Einschränkung:** Für jede Eingabe wird das Programm von vorn wiederholt und erhält die bisherigen Eingaben erneut. Programme mit Zufall (`random`) oder Zeitabfragen können dabei vor einem `input()` andere Ausgaben zeigen als im ersten Durchlauf.
+- Ausgaben über 100.000 Zeichen werden gekürzt.
+- Die Ausführung läuft in einem eigenen Web Worker. Das Diagramm hängt nicht davon ab: Laufzeitfehler, Endlosschleifen oder Abbrüche verzögern es nicht.
 
 ## Teilen
 
@@ -117,8 +127,8 @@ Ergebnis: `Fahrbar` ist ein Interface, das `Auto` realisiert; `Tier` ist abstrak
 ## Tests
 
 ```sh
-node tests/run.js                    # JS-Module (Notation, Layout, Renderer, Client, Storage, Share)
-python3 -m unittest discover tests   # Analyse in py/uml_model.py (CPython ≥ 3.11)
+node tests/run.js                    # JS-Module (Notation, Layout, Renderer, Analyse-/Runner-Client, Storage, Share)
+python3 -m unittest discover tests   # py/uml_model.py (Analyse) und py/run_program.py (Ausführung), CPython ≥ 3.11
 ```
 
 Keine npm-Abhängigkeiten.
@@ -127,7 +137,8 @@ Keine npm-Abhängigkeiten.
 
 ```
 index.html, css/style.css
-js/   app.js editor.js analyzer-client.js worker.js notation.js layout.js render.js viewport.js storage.js share.js example.js
+js/   app.js editor.js analyzer-client.js worker.js runner-client.js run-worker.js notation.js layout.js render.js viewport.js storage.js share.js example.js
 py/   uml_model.py      Analyse: analyze(source) -> Klassenmodell (dict)
+      run_program.py    Ausführung: run(source, inputs, write) -> Status (ok / error / input)
 tests/
 ```

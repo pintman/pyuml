@@ -141,9 +141,113 @@
     showMessage('Python konnte nicht geladen werden: ' + e.message, true);
   }
 
+  // ---- Ausgabe (Ausführung im eigenen Worker) ----
+  const out = { section: $('output'), toggle: $('btn-output'), state: $('output-state'), body: $('output-body') };
+  let visStore;
+  try { visStore = P.createStorage(G.localStorage, 'pyuml.outputVisible'); } catch (e) { visStore = P.createStorage(null); }
+  let outputVisible = visStore.load() !== '0';
+  let runner = null;
+  let queue = [];            // noch nicht gerenderte Teile [{cls, text}]
+  let frame = null;
+  let hasOutput = false;
+  let endsWithNewline = true;
+  let endText = '';          // Statustext des letzten Laufendes (bleibt über einen Neustart stehen)
+
+  function setOutputState(text, isError) {
+    out.state.textContent = text || '';
+    out.state.classList.toggle('error', !!isError);
+  }
+
+  function flushOutput() {
+    if (frame !== null) { G.cancelAnimationFrame(frame); frame = null; }
+    if (!queue.length) return;
+    const b = out.body;
+    const atBottom = b.scrollTop + b.clientHeight >= b.scrollHeight - 4;
+    const frag = document.createDocumentFragment();
+    queue.forEach(function (p) {
+      if (!p.cls) { frag.appendChild(document.createTextNode(p.text)); return; }
+      const span = document.createElement('span');
+      span.className = p.cls;
+      span.textContent = p.text;
+      frag.appendChild(span);
+    });
+    queue = [];
+    b.appendChild(frag);
+    if (atBottom) b.scrollTop = b.scrollHeight;
+  }
+
+  function appendOutput(cls, text) {
+    if (!text) return;
+    queue.push({ cls: cls, text: text });
+    hasOutput = true;
+    endsWithNewline = text.charAt(text.length - 1) === '\n';
+    if (frame === null) frame = G.requestAnimationFrame(function () { frame = null; flushOutput(); });
+  }
+
+  function appendNote(text) {
+    appendOutput('note', (endsWithNewline ? '' : '\n') + text + '\n');
+  }
+
+  function clearOutput() {
+    if (frame !== null) { G.cancelAnimationFrame(frame); frame = null; }
+    queue = [];
+    out.body.textContent = '';
+    hasOutput = false;
+    endsWithNewline = true;
+  }
+
+  function ensureRunner() {
+    if (runner) return;
+    runner = P.createRunnerClient({
+      createWorker: function () { return new Worker('js/run-worker.js'); },
+      prompt: function (text) { flushOutput(); return G.prompt(text || 'Eingabe:', ''); },
+      onRunStart: function () { clearOutput(); endText = ''; setOutputState('läuft …'); },
+      onOutput: function (stream, text) { appendOutput(stream === 'err' ? 'err' : stream === 'note' ? 'note' : null, text); },
+      onRunEnd: function (reason) {
+        endText = reason === 'timeout' ? 'abgebrochen nach 5 s' : reason === 'input-cancelled' ? 'Eingabe abgebrochen' : '';
+        setOutputState(endText);
+        if (reason === 'done' && !hasOutput) appendNote('Keine Ausgabe');
+        else if (reason === 'timeout') appendNote('Programm nach 5 Sekunden abgebrochen.');
+        else if (reason === 'input-cancelled') appendNote('Eingabe abgebrochen.');
+        flushOutput();
+      },
+      onStatus: function (status, msg) {
+        if (status === 'loading') setOutputState(endText || 'Python wird geladen …');
+        else if (status === 'ready') setOutputState(endText);
+        else if (status === 'failed') {
+          setOutputState('Python konnte nicht geladen werden', true);
+          clearOutput();
+          appendOutput('err', 'Python für die Ausführung konnte nicht geladen werden. Bitte Internetverbindung prüfen ' +
+            'und die Seite über einen Webserver öffnen (z. B. python3 -m http.server).' + (msg ? '\n(' + msg + ')' : '') + '\n');
+          flushOutput();
+        }
+      }
+    });
+  }
+
+  function setOutputVisible(visible, save) {
+    outputVisible = visible;
+    out.section.classList.toggle('collapsed', !visible);
+    out.toggle.setAttribute('aria-expanded', visible ? 'true' : 'false');
+    editor.refresh();
+    if (save) visStore.save(visible ? '1' : '0');
+    if (visible) {
+      ensureRunner();
+      runner.runNow(editor.getValue());
+    } else if (runner) {
+      runner.cancel();
+      endText = '';
+      setOutputState('');
+    }
+  }
+
+  out.toggle.addEventListener('click', function () { setOutputVisible(!outputVisible, true); });
+  setOutputVisible(outputVisible, false);
+
   editor.onChange(function (text) {
     storage.save(text);
     if (client && client.status() === 'ready') client.update(text);
+    if (outputVisible && runner) runner.update(text);
   });
 
   // ---- Schaltflächen ----
@@ -205,5 +309,5 @@
     els.splitter.addEventListener('pointerup', up);
   });
 
-  G.PyUML.app = { editor: editor, client: client };   // für Tests/Konsole
+  G.PyUML.app = { editor: editor, client: client, runner: function () { return runner; } };   // für Tests/Konsole
 })(globalThis);
