@@ -827,17 +827,23 @@ class AnnotationsWarnungen(unittest.TestCase):
 # ---------------------------------------------------------------- 3.5 README-Beispiele
 
 class ReadmeBeispiele(unittest.TestCase):
-    """Die ```python-Blöcke im Abschnitt „Annotationen“ des README mit erwarteten Ergebnissen."""
+    """Die ```python-Blöcke der Abschnitte „Interfaces“ und „Annotationen“ des README."""
 
-    def blocks(self):
+    def block(self, marker):
         with open(os.path.join(ROOT, "README.md"), encoding="utf-8") as f:
             text = f.read()
-        return re.findall(r"```python\n(.*?)```", text, re.S)
+        found = [b for b in re.findall(r"```python\n(.*?)```", text, re.S) if marker in b]
+        self.assertEqual(len(found), 1, marker)
+        return found[0]
+
+    def test_interface_beispiel(self):
+        m = analyze(self.block("class Wartbar(Protocol)"))
+        self.assertEqual(m["warnings"], [])
+        self.assertEqual(cls(m, "Wartbar")["kind"], "interface")
+        self.assertEqual(len(rels(m, "realization", "Auto", "Wartbar")), 1)
 
     def test_beispiele(self):
-        blocks = self.blocks()
-        self.assertGreaterEqual(len(blocks), 1)
-        m = analyze(blocks[0])
+        m = analyze(self.block("# uml:"))
         self.assertEqual(m["warnings"], [])
         self.assertEqual(cls(m, "Fahrbar")["kind"], "interface")
         self.assertEqual(cls(m, "Tier")["kind"], "abstract")
@@ -863,8 +869,11 @@ class Beispielprogramm(unittest.TestCase):
         self.assertNotIn("error", m)
         self.assertEqual(m["warnings"], [])
         kinds = {r["kind"] for r in m["relations"]}
-        self.assertTrue({"generalization", "association", "composition"} <= kinds, kinds)
-        self.assertIn("abstract", {c["kind"] for c in m["classes"]})
+        self.assertTrue({"generalization", "realization", "association", "composition"} <= kinds,
+                        kinds)
+        class_kinds = {c["kind"] for c in m["classes"]}
+        self.assertIn("abstract", class_kinds)
+        self.assertIn("interface", class_kinds)
 
 
 if __name__ == "__main__":

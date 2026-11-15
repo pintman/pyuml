@@ -1,9 +1,17 @@
-/* Beispielprogramm für den ersten Start: Vererbung, Assoziation, Komposition, abstrakte Klasse. */
+/* Beispielprogramm für den ersten Start: Vererbung, Assoziation, Komposition, abstrakte Klasse, Interface. */
 (function (G) {
   'use strict';
   const P = G.PyUML = G.PyUML || {};
 
   P.EXAMPLE = String.raw`from abc import ABC, abstractmethod
+from typing import Protocol
+
+
+class Wartbar(Protocol):
+    """Interface: alles, was gewartet werden kann."""
+
+    def warten(self) -> None:
+        ...
 
 
 class Fahrzeug(ABC):
@@ -30,13 +38,16 @@ class Motor:
         self.ps = ps
 
 
-class Auto(Fahrzeug):
+class Auto(Fahrzeug, Wartbar):  # Realisierung: Auto implementiert Wartbar
     def __init__(self, marke: str, ps: int):
         super().__init__(marke)
         self.motor = Motor(ps)  # Komposition: das Auto erzeugt seinen Motor
 
     def raeder(self) -> int:
         return 4
+
+    def warten(self) -> None:
+        print(self.marke, "wird gewartet")
 
 
 class Fahrrad(Fahrzeug):

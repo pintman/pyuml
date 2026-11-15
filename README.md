@@ -40,6 +40,27 @@ Beim Öffnen eines solchen Links steht dessen Quelltext im Editor und das Diagra
 - Klassenart: abstrakt (`ABC` oder `@abstractmethod`), Interface (`Protocol`), Aufzählung (`Enum`).
 - Beziehungen: Vererbung/Realisierung, Assoziation (Objekt übergeben), Komposition (Objekt selbst erzeugt), Abhängigkeit (nur Parameter-/Rückgabetyp oder lokal erzeugt). Multiplizität `1`, `0..1` (`| None`), `*` (Container).
 
+## Interfaces
+
+Ein Interface ist in Python eine Klasse, die von `typing.Protocol` erbt. Sie erscheint mit `«interface»` über dem Namen. Jede Klasse, die das Interface als Basisklasse angibt, realisiert es: gestrichelte Linie mit hohlem Dreieck am Interface. Das Interface steht oberhalb der Klassen, die es realisieren.
+
+```python
+from typing import Protocol
+
+
+class Wartbar(Protocol):
+    def warten(self) -> None: ...
+
+
+class Auto(Wartbar):
+    def warten(self) -> None:
+        print("Auto wird gewartet")
+```
+
+Ergebnis: `«interface» Wartbar` mit `+ warten(): void`; `Auto` - - -▷ `Wartbar`.
+
+Soll eine `ABC`-Klasse als Interface erscheinen, hilft die Annotation `# uml: interface` (siehe unten).
+
 ## Annotationen `# uml: …`
 
 Wo die Heuristik nicht trifft, legt ein Kommentar fest, was gemeint ist. Er gilt für das Element in **derselben Zeile** oder – als eigene Zeile – für das Element in der **nächsten Codezeile**. Mehrere Schlüsselwörter durch Leerzeichen oder Komma trennen; Groß-/Kleinschreibung egal. Andere Kommentare wirken nicht.
