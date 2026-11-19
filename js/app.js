@@ -159,7 +159,8 @@
   }
 
   // ---- Ausgabe (Ausführung im eigenen Worker) ----
-  const out = { section: $('output'), toggle: $('btn-output'), state: $('output-state'), body: $('output-body') };
+  const out = { section: $('output'), toggle: $('btn-output'), state: $('output-state'), body: $('output-body'),
+    splitter: $('output-splitter') };
   let visStore;
   try { visStore = P.createStorage(G.localStorage, 'pyuml.outputVisible'); } catch (e) { visStore = P.createStorage(null); }
   let outputVisible = visStore.load() !== '0';
@@ -246,6 +247,7 @@
     outputVisible = visible;
     out.section.classList.toggle('collapsed', !visible);
     out.toggle.setAttribute('aria-expanded', visible ? 'true' : 'false');
+    out.splitter.hidden = !visible;
     editor.refresh();
     if (save) visStore.save(visible ? '1' : '0');
     if (visible) {
@@ -306,24 +308,36 @@
     }
   });
 
-  // ---- Verschiebbare Trennlinie ----
-  els.splitter.addEventListener('pointerdown', function (e) {
-    e.preventDefault();
-    els.splitter.setPointerCapture(e.pointerId);
-    els.splitter.classList.add('dragging');
-    function move(ev) {
-      const r = els.panes.getBoundingClientRect();
-      const pct = Math.min(85, Math.max(15, (ev.clientX - r.left) / r.width * 100));
-      els.editorPane.style.flexBasis = pct + '%';
-    }
-    function up() {
-      els.splitter.classList.remove('dragging');
-      els.splitter.removeEventListener('pointermove', move);
-      els.splitter.removeEventListener('pointerup', up);
-      editor.refresh();
-    }
-    els.splitter.addEventListener('pointermove', move);
-    els.splitter.addEventListener('pointerup', up);
+  // ---- Verschiebbare Trennlinien ----
+  /** Zieh-Logik für eine Trennlinie: onMove(pointerEvent) während des Ziehens, danach editor.refresh(). */
+  function makeSplitter(el, onMove) {
+    el.addEventListener('pointerdown', function (e) {
+      e.preventDefault();
+      el.setPointerCapture(e.pointerId);
+      el.classList.add('dragging');
+      function up() {
+        el.classList.remove('dragging');
+        el.removeEventListener('pointermove', onMove);
+        el.removeEventListener('pointerup', up);
+        editor.refresh();
+      }
+      el.addEventListener('pointermove', onMove);
+      el.addEventListener('pointerup', up);
+    });
+  }
+
+  function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+
+  // Editor | Diagramm: Breite des Editors 15–85 %
+  makeSplitter(els.splitter, function (ev) {
+    const r = els.panes.getBoundingClientRect();
+    els.editorPane.style.flexBasis = clamp((ev.clientX - r.left) / r.width * 100, 15, 85) + '%';
+  });
+
+  // Editor / Ausgabe: Höhe der Ausgabe 10–85 % der Editorspalte, vom unteren Rand gemessen
+  makeSplitter(out.splitter, function (ev) {
+    const r = els.editorPane.getBoundingClientRect();
+    out.section.style.flexBasis = clamp((r.bottom - ev.clientY) / r.height * 100, 10, 85) + '%';
   });
 
   G.PyUML.app = { editor: editor, client: client, runner: function () { return runner; } };   // für Tests/Konsole

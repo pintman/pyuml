@@ -22,7 +22,7 @@ Ein Klick auf „Diagramm“ in der Kopfzeile des Diagrammbereichs klappt ihn ei
 
 ## Ausgabe
 
-Unter dem Quelltext zeigt der Bereich „Ausgabe“, was das Programm tut: `print`-Ausgaben und Fehlermeldungen (Tracebacks mit Zeilennummer, rot). Solange der Bereich eingeblendet ist, wird das Programm **nach jeder Tipp-Pause automatisch ausgeführt** – ebenso nach dem Laden, Öffnen einer Datei und Einblenden. Jeder Lauf startet frisch (`__name__ == "__main__"`) und ersetzt die vorige Ausgabe. Ein Klick auf „Ausgabe“ blendet den Bereich aus (der Zustand wird im Browser gespeichert); ausgeblendet wird nichts ausgeführt und kein zweiter Python-Interpreter geladen.
+Unter dem Quelltext zeigt der Bereich „Ausgabe“, was das Programm tut: `print`-Ausgaben und Fehlermeldungen (Tracebacks mit Zeilennummer, rot). Solange der Bereich eingeblendet ist, wird das Programm **nach jeder Tipp-Pause automatisch ausgeführt** – ebenso nach dem Laden, Öffnen einer Datei und Einblenden. Jeder Lauf startet frisch (`__name__ == "__main__"`) und ersetzt die vorige Ausgabe. Ein Klick auf „Ausgabe“ blendet den Bereich aus (der Zustand wird im Browser gespeichert); ausgeblendet wird nichts ausgeführt und kein zweiter Python-Interpreter geladen. Die Höhe des Bereichs lässt sich über die Trennlinie oberhalb der Kopfzeile verstellen (10–85 % der Editorspalte); sie bleibt beim Aus- und Einblenden erhalten, wird aber nicht gespeichert.
 
 - **Zeitlimit 5 s:** Längere Läufe (z. B. Endlosschleifen) werden abgebrochen; die bisherige Ausgabe bleibt stehen.
 - **`input()`** öffnet einen Browser-Dialog – bei jeder Ausführung erneut. Abbrechen beendet den Lauf. Die Zeit im Dialog zählt nicht zum Zeitlimit.
