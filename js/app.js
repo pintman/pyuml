@@ -81,6 +81,23 @@
   const viewport = P.createViewport(els.diagram, { onClassClick: function (line) { editor.gotoLine(line); } });
   $('btn-fit').addEventListener('click', function () { viewport.fit(); });
 
+  // Ein-/Ausklappen: nur Darstellung; Analyse und Rendering laufen weiter
+  const diagramToggle = $('btn-diagram');
+  let diagramStore;
+  try { diagramStore = P.createStorage(G.localStorage, 'pyuml.diagramVisible'); } catch (e) { diagramStore = P.createStorage(null); }
+  let diagramVisible = diagramStore.load() !== '0';
+
+  function setDiagramVisible(visible, save) {
+    diagramVisible = visible;
+    els.panes.classList.toggle('diagram-collapsed', !visible);
+    diagramToggle.setAttribute('aria-expanded', visible ? 'true' : 'false');
+    editor.refresh();
+    if (save) diagramStore.save(visible ? '1' : '0');
+  }
+
+  diagramToggle.addEventListener('click', function () { setDiagramVisible(!diagramVisible, true); });
+  setDiagramVisible(diagramVisible, false);
+
   let elk = null, measure = null;
   function ensureLayout() {
     if (!elk) {

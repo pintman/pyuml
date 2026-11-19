@@ -16,6 +16,10 @@ Danach <http://localhost:8000/> öffnen. Beim ersten Laden wird Pyodide (~10 MB)
 
 GitHub Pages: Repository-Root aus `main` veröffentlichen – alle Pfade sind relativ.
 
+## Diagramm einklappen
+
+Ein Klick auf „Diagramm“ in der Kopfzeile des Diagrammbereichs klappt ihn ein: Es bleibt nur eine schmale Leiste am rechten Rand (im schmalen Fenster die Kopfzeile unter dem Editor), der Editor nutzt den Platz. Erneuter Klick klappt es wieder aus, mit der vorherigen Editorbreite. Der Zustand wird im Browser gespeichert. Die Analyse läuft eingeklappt weiter – Syntaxfehler und Warnungen erscheinen wie gewohnt unter dem Editor, und beim Ausklappen ist das Diagramm aktuell.
+
 ## Ausgabe
 
 Unter dem Quelltext zeigt der Bereich „Ausgabe“, was das Programm tut: `print`-Ausgaben und Fehlermeldungen (Tracebacks mit Zeilennummer, rot). Solange der Bereich eingeblendet ist, wird das Programm **nach jeder Tipp-Pause automatisch ausgeführt** – ebenso nach dem Laden, Öffnen einer Datei und Einblenden. Jeder Lauf startet frisch (`__name__ == "__main__"`) und ersetzt die vorige Ausgabe. Ein Klick auf „Ausgabe“ blendet den Bereich aus (der Zustand wird im Browser gespeichert); ausgeblendet wird nichts ausgeführt und kein zweiter Python-Interpreter geladen.

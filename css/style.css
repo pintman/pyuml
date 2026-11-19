@@ -103,7 +103,13 @@ button:hover { border-color: var(--accent); }
 .diagram.panning { cursor: grabbing; }
 .diagram svg { width: 100%; height: 100%; display: block; user-select: none; }
 .diagram.stale svg { opacity: 0.35; filter: grayscale(1); }
-.diagram-tools { position: absolute; top: 8px; right: 8px; z-index: 1; }
+.diagram-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 2px 6px; background: var(--panel); border-bottom: 1px solid var(--line); font-size: 13px;
+}
+.diagram-head #btn-fit { font-size: 13px; padding: 1px 10px; }
+.diagram-toggle { border: 0; background: none; padding: 2px 6px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.diagram-toggle .arrow { display: inline-block; transition: transform 0.15s; }
 .diagram-message {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center; text-align: center;
@@ -132,4 +138,21 @@ svg.uml text.mult { font-size: 12px; }
   .output.collapsed { flex-basis: auto; }
   .splitter { display: none; }
   .diagram-pane { border-top: 1px solid var(--line); }
+}
+
+/* ---- Diagramm eingeklappt (nach den Media-Query-Regeln, damit es Vorrang hat) ---- */
+.panes.diagram-collapsed .editor-pane { flex: 1 1 0 !important; }
+.panes.diagram-collapsed .splitter,
+.panes.diagram-collapsed #diagram,
+.panes.diagram-collapsed #diagram-message,
+.panes.diagram-collapsed #btn-fit { display: none; }
+.panes.diagram-collapsed .diagram-pane { flex: 0 0 auto; }
+.panes.diagram-collapsed .diagram-toggle .arrow { transform: rotate(-90deg); }
+
+@media (min-width: 800px) {
+  /* Breit: senkrechte Leiste am rechten Rand */
+  .panes.diagram-collapsed .diagram-pane { width: 32px; border-left: 1px solid var(--line); background: var(--panel); }
+  .panes.diagram-collapsed .diagram-head { flex: 1; flex-direction: column; justify-content: flex-start; padding: 6px 0; border-bottom: 0; }
+  .panes.diagram-collapsed .diagram-toggle { writing-mode: vertical-rl; padding: 6px 2px; }
+  .panes.diagram-collapsed .diagram-toggle .arrow { transform: rotate(90deg); }
 }
