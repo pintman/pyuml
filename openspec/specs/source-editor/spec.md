@@ -7,7 +7,7 @@ Stellt den Python-Editor auf der linken Seite bereit: Eingabe und lokale Speiche
 ## Requirements
 
 ### Requirement: Zweispaltige Oberfläche
-Die Anwendung SHALL links einen Editor für Python-Quelltext und rechts das zugehörige Klassendiagramm anzeigen. Die Trennlinie zwischen beiden Bereichen SHALL per Maus verschiebbar sein. Bei Fensterbreiten unter 800 px SHALL der Diagrammbereich unter dem Editor stehen.
+Die Anwendung SHALL links einen Editor für Python-Quelltext und rechts das zugehörige Klassendiagramm anzeigen. Die Trennlinie zwischen beiden Bereichen SHALL per Maus verschiebbar sein. Bei Fensterbreiten unter 800 px SHALL der Diagrammbereich unter dem Editor stehen. Ist das Diagramm eingeklappt, SHALL der Editor den frei werdenden Platz nutzen und die Trennlinie ausgeblendet sein; nach dem Ausklappen SHALL der Editor wieder die vorherige Breite haben.
 
 #### Scenario: Startansicht
 - **WHEN** der Nutzer die Anwendung öffnet
@@ -20,6 +20,14 @@ Die Anwendung SHALL links einen Editor für Python-Quelltext und rechts das zuge
 #### Scenario: Schmales Fenster
 - **WHEN** das Fenster 600 px breit ist
 - **THEN** steht der Diagrammbereich unterhalb des Editors
+
+#### Scenario: Diagramm eingeklappt
+- **WHEN** der Nutzer das Diagramm einklappt
+- **THEN** reicht der Editor bis auf den schmalen Streifen des Diagrammbereichs über die ganze Breite und die Trennlinie ist nicht sichtbar
+
+#### Scenario: Breite nach dem Ausklappen
+- **WHEN** der Nutzer die Trennlinie auf 60 % gezogen, das Diagramm ein- und wieder ausgeklappt hat
+- **THEN** nimmt der Editor wieder 60 % der Breite ein
 
 ### Requirement: Python-Editor
 Der Editor SHALL Zeilennummern und Python-Syntaxhervorhebung anzeigen. Die Tab-Taste SHALL vier Leerzeichen einrücken; nach einer Zeile mit abschließendem `:` SHALL die nächste Zeile automatisch eine Stufe tiefer eingerückt werden.
