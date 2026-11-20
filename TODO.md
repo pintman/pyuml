@@ -1,1 +1,2 @@
 - Hilfe einbinden. Welche Notation wird in den Kommentaren unterstützt.
+- Parameter in Methoden werden als Assiziation gezeichnet. Das soll auch durch einen "# uml: XXX" Kommentar ausschaltbar sein.
